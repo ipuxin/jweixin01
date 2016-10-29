@@ -27,19 +27,35 @@ function gettoken($url)
  */
 $urlData = json_decode(gettoken($urlToken), true);
 $access_token = $urlData['access_token'];
-//print_r($access_token);
 
 /**
- * 获取微信服务器IP
+ * 通过curl的post方式,把长连接转换为短连接
+ * curl -d "{\"action\":\"long2short\",\"long_url\":\"http://wap.koudaitong.com/v2/showcase/goods?alias=128wi9shh&spm=h56083&redirect_count=1\"}"
+ * "https://api.weixin.qq.com/cgi-bin/shorturl?access_token=ACCESS_TOKEN"
  */
-$urlDataIP = $ipurl = "https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token=" . $access_token . "";
-$DataIP = json_decode(gettoken($urlDataIP), true);
-$DataIPList = $DataIP['ip_list'];
+$date = '{"action":"long2short","long_url":"https://mp.weixin.qq.com/advanced/advanced?action=dev&t=advanced/dev&token=1182161746&lang=zh_CN"}';
+$shortUrl = "https://api.weixin.qq.com/cgi-bin/shorturl?access_token=" . $access_token . "";
 
-/**
- * 判断获取IP是否来自微信服务器
- */
-$nowIP = '180.163.15.1597';
-if (in_array($nowIP, $DataIPList)) {
-    echo "来自微信!";
+//Array ( [errcode] => 0 [errmsg] => ok [short_url] => http://w.url.cn/s/Ammcalw )
+$shortUrlArr = json_decode(getShort($date, $shortUrl), true);
+print_r($shortUrlArr);
+
+function getShort($data, $url)
+{
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $tmpInfo = curl_exec($ch);
+    if (curl_errno($ch)) {
+        return curl_error($ch);
+    }
+    curl_close($ch);
+    return $tmpInfo;
 }
