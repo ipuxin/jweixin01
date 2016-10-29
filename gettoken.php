@@ -10,14 +10,12 @@ $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&app
  * 从URL中获取数据
  */
 $token = json_decode(file_get_contents($url), true);
-print_r($token);
-
-//$output=gettoken($url);
-
-//$token=(array)json_decode($output);
-
-//echo $token['access_token'];
 //print_r($token);
+
+/**
+ * 获取token
+ */
+echo $token['access_token'];
 //echo $token['access_token'];
 
 
