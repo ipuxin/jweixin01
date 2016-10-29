@@ -19,6 +19,10 @@ if ($_GET['echostr']) {
 
 class wechatCallbackapiTest
 {
+
+
+
+
     /**
      * 接入时的操作
      */
