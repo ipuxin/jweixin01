@@ -29,16 +29,19 @@ $urlTokenData = json_decode(getCURL($urlToken), true);
 $access_token = $urlTokenData['access_token'];
 
 /**
- * 通过curl获取已关注的用户列表,获取所有用户的openid
+ * 通过curl获取已关注的用户列表(openid)
  */
 //1.将接口赋值给一个变量
-$userUrl = 'https://api.weixin.qq.com/cgi-bin/user/get?access_token='.$access_token;
+$userUrl = 'https://api.weixin.qq.com/cgi-bin/user/get?access_token=' . $access_token;
+
 //2.通过getCURL()进行接口调用
 $userArr = json_decode(getCURL($userUrl), true);
+
 //3.处理得到的数据
 foreach ($userArr['data']['openid'] as $value) {
-    echo $value;
+    //循环获取用户基本信息
+    $infourl = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" . $access_token . "&openid=" . $value . "&lang=zh_CN";
+    $infoarr = (array)json_decode(getCURL($infourl));
+    print_r($infoarr['province']);
     echo "<br />";
 }
-
-print_r($userArr);
