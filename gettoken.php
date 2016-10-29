@@ -4,7 +4,7 @@
 */
 $appid = "wx78478e595939c538";
 $secret = "5540e8ccab4f71dfad752f73cfb85780";
-$url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" . $appid . "&secret=" . $secret . "";
+$urlToken = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" . $appid . "&secret=" . $secret . "";
 
 function gettoken($url)
 {
@@ -21,7 +21,21 @@ function gettoken($url)
 }
 
 /**
- * 通过curl获取数据
+ * 通过curl获取数据,元素名为:
+ * access_token
+ * expires_in
  */
-$token = json_decode(gettoken($url),true);
-print_r($token);
+$urlData = json_decode(gettoken($urlToken), true);
+$access_token = $urlData['access_token'];
+//print_r($access_token);
+
+/**
+ * 获取微信服务器IP
+ */
+$urlIP = $ipurl = "https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token=" . $access_token . "";
+$urlDataIP = json_decode(gettoken($urlIP), true);
+$urlDataIPList = $urlDataIP['ip_list'];
+foreach ($urlDataIPList as $key => $value) {
+    echo '这是第 '.$key . ' 个 => ' . $value . ' 微信服务器IP<br>';
+}
+//print_r($urlDataIP);
