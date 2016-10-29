@@ -32,10 +32,14 @@ $access_token = $urlData['access_token'];
 /**
  * 获取微信服务器IP
  */
-$urlIP = $ipurl = "https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token=" . $access_token . "";
-$urlDataIP = json_decode(gettoken($urlIP), true);
-$urlDataIPList = $urlDataIP['ip_list'];
-foreach ($urlDataIPList as $key => $value) {
-    echo '这是第 '.$key . ' 个 => ' . $value . ' 微信服务器IP<br>';
+$urlDataIP = $ipurl = "https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token=" . $access_token . "";
+$DataIP = json_decode(gettoken($urlDataIP), true);
+$DataIPList = $DataIP['ip_list'];
+
+/**
+ * 判断获取IP是否来自微信服务器
+ */
+$nowIP = '180.163.15.1597';
+if (in_array($nowIP, $DataIPList)) {
+    echo "来自微信!";
 }
-//print_r($urlDataIP);
